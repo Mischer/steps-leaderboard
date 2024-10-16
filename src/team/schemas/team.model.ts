@@ -7,6 +7,9 @@ export type TeamDocument = TeamModel & Document;
 export class TeamModel extends Document {
 	@Prop({ required: true, unique: true })
 	name: string;
+
+	@Prop({ default: Date.now })
+	createdAt: Date;
 }
 
 export const TeamSchema = SchemaFactory.createForClass(TeamModel);
