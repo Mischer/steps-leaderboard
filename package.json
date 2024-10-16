@@ -1,8 +1,8 @@
 {
   "name": "steps-leaderboard",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "An API for managing teams and step counters in a company-wide steps leaderboard application.",
+  "author": "Mikhail Kultyiasau",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
