@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TeamController } from './team.controller';
-import { TeamService } from './team.service';
 import { INestApplication } from '@nestjs/common';
 import { CreateTeamDto } from './dto/create-team.dto';
 import * as request from 'supertest';
+import { TeamService } from './team.service';
+import { faker } from '@faker-js/faker';
 
 describe('TeamController Tests', () => {
 	let app: INestApplication;
+	let teamService: TeamService;
+
 	const mockTeamService = {
 		create: jest.fn(),
 		findAll: jest.fn(),
@@ -19,13 +22,14 @@ describe('TeamController Tests', () => {
 			controllers: [TeamController],
 			providers: [
 				{
-					provide: TeamService,
+					provide: 'TeamService',
 					useValue: mockTeamService,
 				},
 			],
 		}).compile();
 
 		app = moduleFixture.createNestApplication();
+		teamService = app.get<TeamService>('TeamService');
 		await app.init();
 	});
 
@@ -38,56 +42,66 @@ describe('TeamController Tests', () => {
 	});
 
 	describe('/POST teams', () => {
-		it('should create a new team', () => {
-			const createTeamDto: CreateTeamDto = { name: 'Team A' };
-			mockTeamService.create.mockResolvedValue({ id: '1', ...createTeamDto });
+		it('should create a new team', async () => {
+			const id = faker.string.uuid();
+			const createTeamDto: CreateTeamDto = { name: faker.company.name() };
+			const result = { id, ...createTeamDto };
+			mockTeamService.create.mockResolvedValue(result);
 
-			return request(app.getHttpServer()).post('/teams').send(createTeamDto).expect(201).expect({
-				id: '1',
-				name: 'Team A',
-			});
+			await request(app.getHttpServer()).post('/teams').send(createTeamDto).expect(201).expect(result);
+			expect(teamService.create).toHaveBeenCalledWith(createTeamDto);
 		});
 	});
 
 	describe('/GET teams', () => {
-		it('should return an array of teams', () => {
+		it('should return an array of teams', async () => {
+			const id = faker.string.uuid();
 			const teams = [
-				{ id: '1', name: 'Team A' },
-				{ id: '2', name: 'Team B' },
+				{ id, name: faker.company.name() },
+				{ id, name: faker.company.name() },
 			];
 			mockTeamService.findAll.mockResolvedValue(teams);
 
-			return request(app.getHttpServer()).get('/teams').expect(200).expect(teams);
+			await request(app.getHttpServer()).get('/teams').expect(200).expect(teams);
+			expect(teamService.findAll).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	describe('/GET teams/:id', () => {
-		it('should return a team by ID', () => {
-			const team = { id: '1', name: 'Team A' };
+		it('should return a team by ID', async () => {
+			const id = faker.string.uuid();
+			const team = { id, name: faker.company.name() };
 			mockTeamService.findOne.mockResolvedValue(team);
 
-			return request(app.getHttpServer()).get('/teams/1').expect(200).expect(team);
+			await request(app.getHttpServer()).get(`/teams/${id}`).expect(200).expect(team);
+			expect(teamService.findOne).toHaveBeenCalledWith(id);
 		});
 
-		it('should return 404 if team not found', () => {
+		it('should return 404 if team not found', async () => {
+			const id = faker.string.uuid();
 			mockTeamService.findOne.mockResolvedValue(null);
 
-			return request(app.getHttpServer()).get('/teams/99').expect(404);
+			await request(app.getHttpServer()).get(`/teams/${id}`).expect(404);
+			expect(teamService.findOne).toHaveBeenCalledWith(id);
 		});
 	});
 
 	describe('/DELETE teams/:id', () => {
-		it('should delete a team by ID', () => {
-			const team = { id: '1', name: 'Team A' };
+		it('should delete a team by ID', async () => {
+			const id = faker.string.uuid();
+			const team = { id, name: faker.company.name() };
 			mockTeamService.delete.mockResolvedValue(team);
 
-			return request(app.getHttpServer()).delete('/teams/1').expect(200).expect(team);
+			await request(app.getHttpServer()).delete(`/teams/${id}`).expect(200).expect(team);
+			expect(teamService.delete).toHaveBeenCalledWith(id);
 		});
 
-		it('should return 404 if team to delete not found', () => {
+		it('should return 404 if team to delete not found', async () => {
+			const id = faker.string.uuid();
 			mockTeamService.delete.mockResolvedValue(null);
 
-			return request(app.getHttpServer()).delete('/teams/99').expect(404);
+			await request(app.getHttpServer()).delete(`/teams/${id}`).expect(404);
+			expect(teamService.delete).toHaveBeenCalledWith(id);
 		});
 	});
 });
