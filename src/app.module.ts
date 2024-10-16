@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getMongoConfig } from './configs/mongo.config';
+import { TeamModule } from './team/team.module';
 
 @Module({
 	imports: [
@@ -13,9 +12,10 @@ import { getMongoConfig } from './configs/mongo.config';
 			useFactory: getMongoConfig,
 			inject: [ConfigService],
 		}),
+		TeamModule,
 	],
-	controllers: [AppController],
-	providers: [AppService],
+	controllers: [],
+	providers: [],
 	exports: [ConfigModule],
 })
 export class AppModule {}
