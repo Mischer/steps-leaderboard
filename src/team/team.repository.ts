@@ -5,10 +5,10 @@ import { TeamModel, TeamDocument } from './schemas/team.model';
 
 @Injectable()
 export class TeamRepository {
-	constructor(@InjectModel(TeamModel.name) private readonly teamModel: Model<TeamDocument>) {}
+	constructor(@InjectModel(TeamModel.name) private readonly teamModel: Model<TeamModel>) {}
 
 	async createOne(team: Partial<TeamDocument>): Promise<TeamDocument> {
-		return this.tradeModel.save(team);
+		return this.teamModel.create(team);
 	}
 
 	async findAll(): Promise<TeamDocument[]> {

@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TeamModel, TeamDocument } from './schemas/team.model';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { TeamRepository } from './team.repository';
@@ -17,22 +17,14 @@ export class TeamService {
 	}
 
 	async findAll(): Promise<TeamDocument[]> {
-		return this.teamsRepository.findAll(teamModel);
+		return this.teamsRepository.findAll();
 	}
 
 	async findOne(id: string): Promise<TeamDocument> {
-		const team = await this.teamsRepository.findById(id);
-		if (!team) {
-			throw new NotFoundException(`Team with ID "${id}" not found`);
-		}
-		return team;
+		return this.teamsRepository.findById(id);
 	}
 
 	async delete(id: string): Promise<TeamDocument> {
-		const team = await this.teamsRepository.delete(id);
-		if (!team) {
-			throw new NotFoundException(`Team with ID "${id}" not found`);
-		}
-		return team;
+		return this.teamsRepository.delete(id);
 	}
 }
