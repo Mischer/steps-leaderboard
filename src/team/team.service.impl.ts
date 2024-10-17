@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { TeamModel, TeamDocument } from './schemas/team.model';
+import { TeamDocument } from './schemas/team.model';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { TeamRepository } from './team.repository';
 import { TeamService } from './team.service';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class TeamServiceImpl implements TeamService {
@@ -13,8 +14,12 @@ export class TeamServiceImpl implements TeamService {
 		this.logger = new Logger(TeamServiceImpl.name);
 	}
 	async create(createTeamDto: CreateTeamDto): Promise<TeamDocument> {
-		const teamModel = new TeamModel(createTeamDto);
-		return this.teamsRepository.createOne(teamModel);
+		// FIXME use mapper instead
+		const mappedModel = {
+			...createTeamDto,
+		};
+
+		return this.teamsRepository.createOne(mappedModel);
 	}
 
 	async findAll(): Promise<TeamDocument[]> {
@@ -22,10 +27,10 @@ export class TeamServiceImpl implements TeamService {
 	}
 
 	async findOne(id: string): Promise<TeamDocument> {
-		return this.teamsRepository.findById(id);
+		return this.teamsRepository.findById(new Types.ObjectId(id));
 	}
 
 	async delete(id: string): Promise<TeamDocument> {
-		return this.teamsRepository.delete(id);
+		return this.teamsRepository.delete(new Types.ObjectId(id));
 	}
 }

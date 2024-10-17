@@ -1,20 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { UserDocument, UserModel } from './schemas/user.model';
+import { UserDocument } from './schemas/user.model';
 import { IncrementStepsDto } from './dto/increment-steps.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { genSalt, hash } from 'bcryptjs';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class UserServiceImpl implements UserService {
 	constructor(private readonly userRepository: UserRepository) {}
 
 	async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-		const user = new UserModel({
+		// FIXME use mapper instead
+		const user = {
 			...createUserDto,
-			passwordHash: await hash(createUserDto.password, await genSalt(10)),
-		});
+			password: await hash(createUserDto.password, await genSalt(10)),
+			team: new Types.ObjectId(createUserDto.teamId),
+		};
 		return this.userRepository.createOne(user);
 	}
 
@@ -23,11 +26,11 @@ export class UserServiceImpl implements UserService {
 	}
 
 	async findByTeam(teamId: string): Promise<UserDocument[]> {
-		return this.userRepository.findByTeam(teamId);
+		return this.userRepository.findByTeam(new Types.ObjectId(teamId));
 	}
 
 	async incrementSteps(id: string, incrementStepsDto: IncrementStepsDto): Promise<UserDocument> {
-		const user = await this.userRepository.findById(id);
+		const user = await this.userRepository.findById(new Types.ObjectId(id));
 		if (!user) {
 			throw new NotFoundException(`User with ID "${id}" not found`);
 		}
@@ -35,7 +38,7 @@ export class UserServiceImpl implements UserService {
 		return user.save();
 	}
 
-	delete(id: string): Promise<UserDocument> {
-		return this.userRepository.delete(id);
+	delete(id: string): Promise<UserDocument> | null {
+		return this.userRepository.delete(new Types.ObjectId(id));
 	}
 }

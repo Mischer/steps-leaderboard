@@ -1,9 +1,21 @@
-import { Controller, Get, Post, Delete, Param, Body, Patch, Inject, NotFoundException } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Delete,
+	Param,
+	Body,
+	Patch,
+	Inject,
+	NotFoundException,
+	UseFilters,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IncrementStepsDto } from './dto/increment-steps.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { UserDocument } from './schemas/user.model';
 import { UserService } from './user.service';
+import { MongoExceptionFilter } from '../exception/mongo-exception.filter';
 
 @ApiTags('users')
 @Controller('users')
@@ -12,6 +24,7 @@ export class UserController {
 
 	@Post()
 	@ApiOperation({ summary: 'Create a user' })
+	@UseFilters(MongoExceptionFilter)
 	create(@Body() createUserDto: CreateUserDto): Promise<UserDocument> {
 		return this.userService.create(createUserDto);
 	}
@@ -36,8 +49,8 @@ export class UserController {
 
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a user by ID' })
-	delete(@Param('id') id: string): Promise<UserDocument> {
-		const user = this.userService.delete(id);
+	async delete(@Param('id') id: string): Promise<UserDocument> | null {
+		const user = await this.userService.delete(id);
 		if (!user) {
 			throw new NotFoundException(`User with ID "${id}" not found`);
 		}

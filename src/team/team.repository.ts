@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { TeamModel, TeamDocument } from './schemas/team.model';
 
 @Injectable()
@@ -15,11 +15,11 @@ export class TeamRepository {
 		return this.teamModel.find().exec();
 	}
 
-	async findById(id: string): Promise<TeamDocument> {
+	async findById(id: Types.ObjectId): Promise<TeamDocument> {
 		return this.teamModel.findById(id).exec();
 	}
 
-	async delete(id: string): Promise<TeamDocument> {
+	async delete(id: Types.ObjectId): Promise<TeamDocument> {
 		return this.teamModel.findByIdAndDelete(id).exec();
 	}
 }

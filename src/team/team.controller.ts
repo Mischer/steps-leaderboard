@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Delete, Param, Body, NotFoundException, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, NotFoundException, Inject, UseFilters } from '@nestjs/common';
 import { TeamDocument } from './schemas/team.model';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TeamService } from './team.service';
+import { MongoExceptionFilter } from '../exception/mongo-exception.filter';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -12,6 +13,7 @@ export class TeamController {
 	@Post()
 	@ApiOperation({ summary: 'Create a team' })
 	@ApiResponse({ status: 201, description: 'Team created successfully.' })
+	@UseFilters(MongoExceptionFilter)
 	create(@Body() createTeamDto: CreateTeamDto): Promise<TeamDocument> {
 		return this.teamService.create(createTeamDto);
 	}

@@ -15,15 +15,15 @@ export class UserRepository {
 		return this.userModel.find().populate('team').exec();
 	}
 
-	async findById(id: string): Promise<UserDocument> {
+	async findById(id: Types.ObjectId): Promise<UserDocument> {
 		return this.userModel.findById(id).exec();
 	}
 
-	async findByTeam(teamId: string): Promise<UserDocument[]> {
-		return this.userModel.find({ team: new Types.ObjectId(teamId) }).exec();
+	async findByTeam(teamId: Types.ObjectId): Promise<UserDocument[]> {
+		return this.userModel.find({ team: teamId }).exec();
 	}
 
-	async delete(id: string): Promise<UserDocument> {
+	async delete(id: Types.ObjectId): Promise<UserDocument> {
 		return this.userModel.findByIdAndDelete(id).exec();
 	}
 }

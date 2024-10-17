@@ -7,5 +7,5 @@ export interface UserService {
 	findAll(): Promise<UserDocument[]>;
 	findByTeam(teamId: string): Promise<UserDocument[]>;
 	incrementSteps(id: string, incrementStepsDto: IncrementStepsDto): Promise<UserDocument>;
-	delete(id: string): Promise<UserDocument>;
+	delete(id: string): Promise<UserDocument> | null;
 }
