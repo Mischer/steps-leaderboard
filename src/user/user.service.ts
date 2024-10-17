@@ -8,4 +8,5 @@ export interface UserService {
 	findByTeam(teamId: string): Promise<UserDocument[]>;
 	incrementSteps(id: string, incrementStepsDto: IncrementStepsDto): Promise<UserDocument>;
 	delete(id: string): Promise<UserDocument> | null;
+	getTotalStepsByTeam(teamId: string): Promise<{ totalSteps: number }>;
 }

@@ -38,7 +38,16 @@ export class UserServiceImpl implements UserService {
 		return user.save();
 	}
 
-	delete(id: string): Promise<UserDocument> | null {
-		return this.userRepository.delete(new Types.ObjectId(id));
+	async delete(id: string): Promise<UserDocument> {
+		const team = await this.userRepository.delete(new Types.ObjectId(id));
+		if (!team) {
+			throw new NotFoundException(`Team with ID "${id}" not found`);
+		}
+		return team;
+	}
+
+	async getTotalStepsByTeam(teamId: string): Promise<{ totalSteps: number }> {
+		const result = await this.userRepository.getTotalStepsByTeam(new Types.ObjectId(teamId));
+		return { totalSteps: result.length > 0 ? result[0].totalSteps : 0 };
 	}
 }

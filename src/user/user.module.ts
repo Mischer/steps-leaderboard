@@ -21,5 +21,6 @@ import { TeamModel, TeamSchema } from '../team/schemas/team.model';
 			useClass: UserServiceImpl,
 		},
 	],
+	exports: ['UserService'],
 })
 export class UserModule {}

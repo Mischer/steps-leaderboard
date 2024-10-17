@@ -26,4 +26,11 @@ export class UserRepository {
 	async delete(id: Types.ObjectId): Promise<UserDocument> {
 		return this.userModel.findByIdAndDelete(id).exec();
 	}
+
+	async getTotalStepsByTeam(teamId: Types.ObjectId): Promise<{ totalSteps: number }[]> {
+		return this.userModel.aggregate([
+			{ $match: { team: teamId } },
+			{ $group: { _id: null, totalSteps: { $sum: '$steps' } } },
+		]);
+	}
 }

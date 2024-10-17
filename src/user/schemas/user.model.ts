@@ -6,7 +6,7 @@ export type UserDocument = UserModel & Document;
 
 @Schema({ timestamps: true })
 export class UserModel extends Document {
-	@Prop({ required: true })
+	@Prop({ required: true, unique: true })
 	email: string;
 
 	@Prop({ required: true })
