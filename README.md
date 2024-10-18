@@ -53,6 +53,12 @@ npm run start
 
 The application should now be running on `http://localhost:3000`.
 
+## API Documentation (Swagger)
+
+This application provides API documentation using Swagger. Once the application is running, you can access the Swagger UI at:
+
+`http://localhost:3000/explore`
+
 ## Testing
 
 To run the test suite, use:
