@@ -8,6 +8,8 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	const configService = app.get(ConfigService);
 
+	app.setGlobalPrefix(configService.get<string>('GLOBAL_API_PREFIX'));
+
 	// Swagger configuration
 	setupSwagger(app);
 
