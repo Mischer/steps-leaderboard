@@ -9,6 +9,7 @@ import {
 	Inject,
 	NotFoundException,
 	UseFilters,
+	InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateCounterDto } from './dto/create-counter.dto';
 import { IncrementStepsDto } from './dto/increment-steps.dto';
@@ -26,8 +27,12 @@ export class CounterController {
 	@Post()
 	@ApiOperation({ summary: 'Create a counter' })
 	@UseFilters(MongoExceptionFilter)
-	create(@Body() createCounterDto: CreateCounterDto): Promise<CounterDocument> {
-		return this.counterService.create(createCounterDto);
+	async create(@Body() createCounterDto: CreateCounterDto): Promise<CounterDocument> {
+		const counter = await this.counterService.create(createCounterDto);
+		if (!counter) {
+			throw new InternalServerErrorException();
+		}
+		return counter;
 	}
 
 	@Get()
@@ -54,7 +59,7 @@ export class CounterController {
 
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a counter by ID' })
-	async delete(@Param('id') id: string): Promise<CounterDocument> | null {
+	async delete(@Param('id') id: string): Promise<CounterDocument> {
 		const counter = await this.counterService.delete(id);
 		if (!counter) {
 			throw new NotFoundException(COUNTER_NOT_FOUND_ERROR);

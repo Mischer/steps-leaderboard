@@ -7,6 +7,6 @@ export interface CounterService {
 	findAll(): Promise<CounterDocument[]>;
 	findByTeam(teamId: string): Promise<CounterDocument[]>;
 	incrementSteps(id: string, incrementStepsDto: IncrementStepsDto): Promise<CounterDocument>;
-	delete(id: string): Promise<CounterDocument> | null;
+	delete(id: string): Promise<CounterDocument | null>;
 	getTotalStepsByTeam(teamId: string): Promise<{ totalSteps: number }>;
 }

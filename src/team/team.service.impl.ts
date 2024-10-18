@@ -30,12 +30,16 @@ export class TeamServiceImpl implements TeamService {
 		return this.teamsRepository.findAll();
 	}
 
-	async findOne(id: string): Promise<TeamDocument> {
+	async findOne(id: string): Promise<TeamDocument | null> {
 		return this.teamsRepository.findById(new Types.ObjectId(id));
 	}
 
-	async delete(id: string): Promise<TeamDocument> {
+	async delete(id: string): Promise<TeamDocument | null> {
 		return this.teamsRepository.delete(new Types.ObjectId(id));
+	}
+
+	async updateTotalSteps(id: string | Types.ObjectId, stepsDelta: number): Promise<TeamDocument> {
+		return this.teamsRepository.updateTotalSteps(new Types.ObjectId(id), stepsDelta);
 	}
 
 	async getTotalSteps(teamId: string): Promise<TeamTotalStepsResponseDto> {

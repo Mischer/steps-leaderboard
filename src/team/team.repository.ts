@@ -15,11 +15,17 @@ export class TeamRepository {
 		return this.teamModel.find().exec();
 	}
 
-	async findById(id: Types.ObjectId): Promise<TeamDocument> {
+	async findById(id: Types.ObjectId): Promise<TeamDocument | null> {
 		return this.teamModel.findById(id).exec();
 	}
 
-	async delete(id: Types.ObjectId): Promise<TeamDocument> {
+	async delete(id: Types.ObjectId): Promise<TeamDocument | null> {
 		return this.teamModel.findByIdAndDelete(id).exec();
+	}
+
+	async updateTotalSteps(id: Types.ObjectId, stepDifference: number): Promise<TeamDocument> {
+		return this.teamModel.findByIdAndUpdate(id, {
+			$inc: { totalSteps: stepDifference },
+		});
 	}
 }

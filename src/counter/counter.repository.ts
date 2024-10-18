@@ -15,7 +15,7 @@ export class CounterRepository {
 		return this.counterModel.find().populate('team').exec();
 	}
 
-	async findById(id: Types.ObjectId): Promise<CounterDocument> {
+	async findById(id: Types.ObjectId): Promise<CounterDocument | null> {
 		return this.counterModel.findById(id).exec();
 	}
 
@@ -23,8 +23,14 @@ export class CounterRepository {
 		return this.counterModel.find({ team: teamId }).exec();
 	}
 
-	async delete(id: Types.ObjectId): Promise<CounterDocument> {
+	async delete(id: Types.ObjectId): Promise<CounterDocument | null> {
 		return this.counterModel.findByIdAndDelete(id).exec();
+	}
+
+	async updateSteps(id: Types.ObjectId, stepDifference: number): Promise<CounterDocument | null> {
+		return this.counterModel.findByIdAndUpdate(id, {
+			$inc: { steps: stepDifference },
+		});
 	}
 
 	async getTotalStepsByTeam(teamId: Types.ObjectId): Promise<{ totalSteps: number }[]> {
