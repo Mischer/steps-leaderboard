@@ -27,8 +27,8 @@ export class TeamController {
 
 	@Get(':id')
 	@ApiOperation({ summary: 'Get a team by ID' })
-	async findOne(@Param('id') id: string): Promise<TeamDocument> {
-		const team = await this.teamService.findOne(id);
+	async findById(@Param('id') id: string): Promise<TeamDocument> {
+		const team = await this.teamService.findById(id);
 		if (!team) {
 			throw new NotFoundException(TEAM_NOT_FOUND_ERROR);
 		}

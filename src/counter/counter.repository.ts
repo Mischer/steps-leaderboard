@@ -28,8 +28,12 @@ export class CounterRepository {
 	}
 
 	async updateSteps(id: Types.ObjectId, stepDifference: number): Promise<CounterDocument | null> {
-		return this.counterModel.findByIdAndUpdate(id, {
-			$inc: { steps: stepDifference },
-		});
+		return this.counterModel.findByIdAndUpdate(
+			id,
+			{
+				$inc: { steps: stepDifference },
+			},
+			{ new: true },
+		);
 	}
 }

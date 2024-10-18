@@ -29,7 +29,7 @@ export class TeamServiceImpl implements TeamService {
 		return this.teamsRepository.findAll();
 	}
 
-	async findOne(id: string): Promise<TeamDocument | null> {
+	async findById(id: string): Promise<TeamDocument | null> {
 		return this.teamsRepository.findById(new Types.ObjectId(id));
 	}
 

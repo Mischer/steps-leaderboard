@@ -41,6 +41,16 @@ export class CounterController {
 		return this.counterService.findAll();
 	}
 
+	@Get(':id')
+	@ApiOperation({ summary: 'Get a counter by ID' })
+	async findById(@Param('id') id: string): Promise<CounterDocument> {
+		const counter = await this.counterService.findById(id);
+		if (!counter) {
+			throw new NotFoundException(COUNTER_NOT_FOUND_ERROR);
+		}
+		return counter;
+	}
+
 	@Get('teams/:teamId')
 	@ApiOperation({ summary: 'Get all counters for a team' })
 	findByTeam(@Param('teamId') teamId: string): Promise<CounterDocument[]> {

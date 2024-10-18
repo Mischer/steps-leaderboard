@@ -34,6 +34,10 @@ export class CounterServiceImpl implements CounterService {
 		return this.counterRepository.findAll();
 	}
 
+	async findById(id: string): Promise<CounterDocument | null> {
+		return this.counterRepository.findById(new Types.ObjectId(id));
+	}
+
 	async findByTeam(teamId: string): Promise<CounterDocument[]> {
 		return this.counterRepository.findByTeam(new Types.ObjectId(teamId));
 	}
