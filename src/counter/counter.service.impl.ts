@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CounterRepository } from './counter.repository';
 import { CounterDocument } from './schemas/counter.model';
 import { IncrementStepsDto } from './dto/increment-steps.dto';
@@ -12,8 +12,7 @@ export class CounterServiceImpl implements CounterService {
 	private logger;
 	constructor(
 		private readonly counterRepository: CounterRepository,
-		@Inject(forwardRef(() => 'TeamService'))
-		private readonly teamService: TeamService,
+		@Inject('TeamService') private readonly teamService: TeamService,
 	) {
 		this.logger = new Logger(CounterServiceImpl.name);
 	}

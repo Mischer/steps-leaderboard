@@ -13,7 +13,7 @@ describe('TeamController Tests', () => {
 	const mockTeamService = {
 		create: jest.fn(),
 		findAll: jest.fn(),
-		findOne: jest.fn(),
+		findById: jest.fn(),
 		delete: jest.fn(),
 	};
 
@@ -71,18 +71,18 @@ describe('TeamController Tests', () => {
 		it('should return a team by ID', async () => {
 			const id = faker.string.uuid();
 			const team = { id, name: faker.company.name() };
-			mockTeamService.findOne.mockResolvedValue(team);
+			mockTeamService.findById.mockResolvedValue(team);
 
 			await request(app.getHttpServer()).get(`/teams/${id}`).expect(200).expect(team);
-			expect(teamService.findOne).toHaveBeenCalledWith(id);
+			expect(teamService.findById).toHaveBeenCalledWith(id);
 		});
 
 		it('should return 404 if team not found', async () => {
 			const id = faker.string.uuid();
-			mockTeamService.findOne.mockResolvedValue(null);
+			mockTeamService.findById.mockResolvedValue(null);
 
 			await request(app.getHttpServer()).get(`/teams/${id}`).expect(404);
-			expect(teamService.findOne).toHaveBeenCalledWith(id);
+			expect(teamService.findById).toHaveBeenCalledWith(id);
 		});
 	});
 

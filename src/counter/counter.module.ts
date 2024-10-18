@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CounterController } from './counter.controller';
 import { CounterServiceImpl } from './counter.service.impl';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,7 +14,7 @@ import { TeamModule } from '../team/team.module';
 			{ name: CounterModel.name, schema: CounterSchema },
 			{ name: TeamModel.name, schema: TeamSchema },
 		]),
-		forwardRef(() => TeamModule),
+		TeamModule,
 	],
 	providers: [
 		CounterRepository, // Separate DB layer

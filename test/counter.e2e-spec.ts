@@ -6,6 +6,7 @@ import { CounterDocument } from '../src/counter/schemas/counter.model';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { faker } from '@faker-js/faker';
 
 const counterApiPath = '/counters';
 
@@ -18,16 +19,11 @@ describe('CounterController (e2e)', () => {
 	let mongoServer: MongoMemoryServer;
 
 	beforeAll(async () => {
-		// Start the in-memory MongoDB server
 		mongoServer = await MongoMemoryServer.create();
 		const mongoUri = mongoServer.getUri();
 
-		// Create a testing module with an in-memory MongoDB connection
 		const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [
-				MongooseModule.forRoot(mongoUri), // Use the in-memory MongoDB URI
-				AppModule,
-			],
+			imports: [MongooseModule.forRoot(mongoUri), AppModule],
 		}).compile();
 
 		app = moduleFixture.createNestApplication();
@@ -35,7 +31,6 @@ describe('CounterController (e2e)', () => {
 	});
 
 	afterAll(async () => {
-		// Stop the in-memory MongoDB server
 		await mongoose.disconnect();
 		await mongoServer.stop();
 		await app.close();
@@ -64,7 +59,7 @@ describe('CounterController (e2e)', () => {
 
 	it('PATCH /counters/:id/increment - should update steps of the counter', async () => {
 		const incrementStepsDto = {
-			steps: 150,
+			steps: faker.number.int({ min: 1, max: 1000 }),
 		};
 
 		const response = await request(app.getHttpServer())
