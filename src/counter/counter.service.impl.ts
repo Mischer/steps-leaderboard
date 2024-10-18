@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CounterRepository } from './counter.repository';
 import { CounterDocument } from './schemas/counter.model';
 import { IncrementStepsDto } from './dto/increment-steps.dto';
@@ -8,7 +8,10 @@ import { Types } from 'mongoose';
 
 @Injectable()
 export class CounterServiceImpl implements CounterService {
-	constructor(private readonly counterRepository: CounterRepository) {}
+	private logger;
+	constructor(private readonly counterRepository: CounterRepository) {
+		this.logger = new Logger(CounterServiceImpl.name);
+	}
 
 	async create(createCounterDto: CreateCounterDto): Promise<CounterDocument> {
 		// FIXME use mapper instead
@@ -30,18 +33,15 @@ export class CounterServiceImpl implements CounterService {
 	async incrementSteps(id: string, incrementStepsDto: IncrementStepsDto): Promise<CounterDocument> {
 		const counter = await this.counterRepository.findById(new Types.ObjectId(id));
 		if (!counter) {
-			throw new NotFoundException(`Counter with ID "${id}" not found`);
+			return null;
 		}
+
 		counter.steps += incrementStepsDto.steps;
 		return counter.save();
 	}
 
 	async delete(id: string): Promise<CounterDocument> {
-		const team = await this.counterRepository.delete(new Types.ObjectId(id));
-		if (!team) {
-			throw new NotFoundException(`Counter with ID "${id}" not found`);
-		}
-		return team;
+		return this.counterRepository.delete(new Types.ObjectId(id));
 	}
 
 	async getTotalStepsByTeam(teamId: string): Promise<{ totalSteps: number }> {

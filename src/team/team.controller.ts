@@ -5,6 +5,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TeamService } from './team.service';
 import { MongoExceptionFilter } from '../exception/mongo-exception.filter';
 import { TeamTotalStepsResponseDto } from './dto/team-total-steps-response.dto';
+import { TEAM_NOT_FOUND_ERROR } from './team.constants';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -30,7 +31,7 @@ export class TeamController {
 	async findOne(@Param('id') id: string): Promise<TeamDocument> {
 		const team = await this.teamService.findOne(id);
 		if (!team) {
-			throw new NotFoundException(`Team with ID "${id}" not found`);
+			throw new NotFoundException(TEAM_NOT_FOUND_ERROR);
 		}
 		return team;
 	}
@@ -38,7 +39,11 @@ export class TeamController {
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a team by ID' })
 	async delete(@Param('id') id: string): Promise<TeamDocument> {
-		return this.teamService.delete(id);
+		const team = await this.teamService.delete(id);
+		if (!team) {
+			throw new NotFoundException(TEAM_NOT_FOUND_ERROR);
+		}
+		return team;
 	}
 
 	@Get(':id/totalSteps')

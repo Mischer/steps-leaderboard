@@ -11,9 +11,6 @@ export class CounterModel extends Document {
 
 	@Prop({ type: Types.ObjectId, ref: TeamModel.name, required: true })
 	team: Types.ObjectId;
-
-	@Prop({ default: Date.now })
-	createdAt: Date;
 }
 
 export const CounterSchema = SchemaFactory.createForClass(CounterModel);

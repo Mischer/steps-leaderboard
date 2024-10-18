@@ -8,8 +8,8 @@ export class TeamModel extends Document {
 	@Prop({ required: true, unique: true })
 	name: string;
 
-	@Prop({ default: Date.now })
-	createdAt: Date;
+	@Prop({ type: Number, default: 0 })
+	totalSteps: number;
 }
 
 export const TeamSchema = SchemaFactory.createForClass(TeamModel);

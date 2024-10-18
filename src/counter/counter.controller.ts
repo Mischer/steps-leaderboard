@@ -16,6 +16,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CounterDocument } from './schemas/counter.model';
 import { CounterService } from './counter.service';
 import { MongoExceptionFilter } from '../exception/mongo-exception.filter';
+import { COUNTER_NOT_FOUND_ERROR } from './countert.constants';
 
 @ApiTags('counters')
 @Controller('counters')
@@ -43,8 +44,12 @@ export class CounterController {
 
 	@Patch(':id/increment')
 	@ApiOperation({ summary: 'Increment counter steps' })
-	increment(@Param('id') id: string, @Body() incrementStepsDto: IncrementStepsDto): Promise<CounterDocument> {
-		return this.counterService.incrementSteps(id, incrementStepsDto);
+	async increment(@Param('id') id: string, @Body() incrementStepsDto: IncrementStepsDto): Promise<CounterDocument> {
+		const counter = await this.counterService.incrementSteps(id, incrementStepsDto);
+		if (!counter) {
+			throw new NotFoundException(COUNTER_NOT_FOUND_ERROR);
+		}
+		return counter;
 	}
 
 	@Delete(':id')
@@ -52,7 +57,7 @@ export class CounterController {
 	async delete(@Param('id') id: string): Promise<CounterDocument> | null {
 		const counter = await this.counterService.delete(id);
 		if (!counter) {
-			throw new NotFoundException(`Counter with ID "${id}" not found`);
+			throw new NotFoundException(COUNTER_NOT_FOUND_ERROR);
 		}
 		return counter;
 	}
