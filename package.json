@@ -4,7 +4,7 @@
   "description": "An API for managing teams and step counters in a company-wide steps leaderboard application.",
   "author": "Mikhail Kultyiasau",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
