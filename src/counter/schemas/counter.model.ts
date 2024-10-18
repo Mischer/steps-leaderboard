@@ -2,16 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { TeamModel } from '../../team/schemas/team.model';
 
-export type UserDocument = UserModel & Document;
+export type CounterDocument = CounterModel & Document;
 
 @Schema({ timestamps: true })
-export class UserModel extends Document {
-	@Prop({ required: true, unique: true })
-	email: string;
-
-	@Prop({ required: true })
-	password: string;
-
+export class CounterModel extends Document {
 	@Prop({ type: Number, default: 0 })
 	steps: number;
 
@@ -22,4 +16,4 @@ export class UserModel extends Document {
 	createdAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(UserModel);
+export const CounterSchema = SchemaFactory.createForClass(CounterModel);

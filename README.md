@@ -115,7 +115,7 @@ Running the Application
     
     Authentication
     
-    Currently, the API is open. Implementing authentication (e.g., JWT, OAuth2) would ensure that only authorized users can interact with the API.
+    Currently, the API is open. Implementing authentication (e.g., JWT, OAuth2) would ensure that only authorized counters can interact with the API.
     
     Notes
     

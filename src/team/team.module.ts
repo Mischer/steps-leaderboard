@@ -4,11 +4,11 @@ import { TeamController } from './team.controller';
 import { TeamModel, TeamSchema } from './schemas/team.model';
 import { TeamServiceImpl } from './team.service.impl';
 import { TeamRepository } from './team.repository';
-import { UserModule } from '../user/user.module';
+import { CounterModule } from '../counter/counter.module';
 
 @Module({
 	controllers: [TeamController],
-	imports: [MongooseModule.forFeature([{ name: TeamModel.name, schema: TeamSchema }]), UserModule],
+	imports: [MongooseModule.forFeature([{ name: TeamModel.name, schema: TeamSchema }]), CounterModule],
 	providers: [
 		TeamRepository, // Separate DB layer
 		{

@@ -4,7 +4,7 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { TeamRepository } from './team.repository';
 import { TeamService } from './team.service';
 import { Types } from 'mongoose';
-import { UserService } from '../user/user.service';
+import { CounterService } from '../counter/counter.service';
 import { TeamTotalStepsResponseDto } from './dto/team-total-steps-response.dto';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class TeamServiceImpl implements TeamService {
 	private logger;
 
 	constructor(
-		@Inject('UserService') private readonly userService: UserService,
+		@Inject('CounterService') private readonly counterService: CounterService,
 		private readonly teamsRepository: TeamRepository,
 	) {
 		this.logger = new Logger(TeamServiceImpl.name);
@@ -44,7 +44,7 @@ export class TeamServiceImpl implements TeamService {
 			throw new NotFoundException(`Team with id ${teamId} not found`);
 		}
 
-		const result = await this.userService.getTotalStepsByTeam(teamId);
+		const result = await this.counterService.getTotalStepsByTeam(teamId);
 		return {
 			teamId,
 			...result,

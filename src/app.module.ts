@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getMongoConfig } from './configs/mongo.config';
 import { TeamModule } from './team/team.module';
-import { UserModule } from './user/user.module';
+import { CounterModule } from './counter/counter.module';
 
 @Module({
 	imports: [
@@ -14,7 +14,7 @@ import { UserModule } from './user/user.module';
 			inject: [ConfigService],
 		}),
 		TeamModule,
-		UserModule,
+		CounterModule,
 	],
 	controllers: [],
 	providers: [],
