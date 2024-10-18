@@ -4,7 +4,6 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TeamService } from './team.service';
 import { MongoExceptionFilter } from '../exception/mongo-exception.filter';
-import { TeamTotalStepsResponseDto } from './dto/team-total-steps-response.dto';
 import { TEAM_NOT_FOUND_ERROR } from './team.constants';
 
 @ApiTags('teams')
@@ -44,11 +43,5 @@ export class TeamController {
 			throw new NotFoundException(TEAM_NOT_FOUND_ERROR);
 		}
 		return team;
-	}
-
-	@Get(':id/totalSteps')
-	@ApiOperation({ summary: 'Get total steps for a team by ID' })
-	async getTotalSteps(@Param('id') id: string): Promise<TeamTotalStepsResponseDto> {
-		return this.teamService.getTotalSteps(id);
 	}
 }

@@ -57,9 +57,4 @@ export class CounterServiceImpl implements CounterService {
 		await this.teamService.updateTotalSteps(counter.team, -counter.steps);
 		return counter;
 	}
-
-	async getTotalStepsByTeam(teamId: string): Promise<{ totalSteps: number }> {
-		const result = await this.counterRepository.getTotalStepsByTeam(new Types.ObjectId(teamId));
-		return { totalSteps: result.length > 0 ? result[0].totalSteps : 0 };
-	}
 }

@@ -32,11 +32,4 @@ export class CounterRepository {
 			$inc: { steps: stepDifference },
 		});
 	}
-
-	async getTotalStepsByTeam(teamId: Types.ObjectId): Promise<{ totalSteps: number }[]> {
-		return this.counterModel.aggregate([
-			{ $match: { team: teamId } },
-			{ $group: { _id: null, totalSteps: { $sum: '$steps' } } },
-		]);
-	}
 }

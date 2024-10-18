@@ -1,11 +1,10 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { TeamDocument } from './schemas/team.model';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { TeamRepository } from './team.repository';
 import { TeamService } from './team.service';
 import { Types } from 'mongoose';
 import { CounterService } from '../counter/counter.service';
-import { TeamTotalStepsResponseDto } from './dto/team-total-steps-response.dto';
 
 @Injectable()
 export class TeamServiceImpl implements TeamService {
@@ -40,18 +39,5 @@ export class TeamServiceImpl implements TeamService {
 
 	async updateTotalSteps(id: string | Types.ObjectId, stepsDelta: number): Promise<TeamDocument> {
 		return this.teamsRepository.updateTotalSteps(new Types.ObjectId(id), stepsDelta);
-	}
-
-	async getTotalSteps(teamId: string): Promise<TeamTotalStepsResponseDto> {
-		const team = await this.findOne(teamId);
-		if (!team) {
-			throw new NotFoundException(`Team with id ${teamId} not found`);
-		}
-
-		const result = await this.counterService.getTotalStepsByTeam(teamId);
-		return {
-			teamId,
-			...result,
-		};
 	}
 }
